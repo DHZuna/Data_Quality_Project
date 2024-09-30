@@ -127,3 +127,25 @@ class DataQuality:
             plt.title(f'Contagem de {col}')
             plt.gca().invert_yaxis()  # Inverter eixo y para melhor visualização
             plt.show()
+
+       # Método para exibir estatísticas descritivas das colunas numéricas
+    def describe_numeric(self):
+        numeric_columns = self.dataframe.select_dtypes(include=['number']).columns
+        display(HTML("<h3 style='font-size: 20px;'>Estatísticas Descritivas das Colunas Numéricas</h3>"))
+        
+        # Calcular estatísticas descritivas para colunas numéricas
+        desc_df = self.dataframe[numeric_columns].describe().T  # Transpor para uma visualização melhor
+        desc_df['count'] = desc_df['count'].astype(int)  # Formatar contagem como inteiro
+
+        # Exibir tabela de estatísticas descritivas
+        display(desc_df.style.set_table_attributes('style="font-size: 16px;"'))
+        
+        # Gerar gráficos de distribuição (histogramas) para cada coluna numérica
+        for col in numeric_columns:
+            plt.figure(figsize=(10, 6))
+            plt.hist(self.dataframe[col].dropna(), bins=15, color='skyblue', edgecolor='black')
+            plt.title(f'Distribuição de {col}')
+            plt.xlabel(col)
+            plt.ylabel('Frequência')
+            plt.grid(True)
+            plt.show()
