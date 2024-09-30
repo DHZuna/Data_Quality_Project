@@ -83,3 +83,24 @@ class DataQuality:
         plt.title('Valores Nulos por Coluna')
         plt.gca().invert_yaxis()  # Inverter eixo y para facilitar leitura
         plt.show()
+
+
+    def unique_values(self):  # Unique Values Table and Plot
+        unique_counts = self.dataframe.nunique()
+
+        # Criar dataframe com contagem de valores únicos
+        unique_values_df = pd.DataFrame({
+            "Nome da Coluna": self.dataframe.columns,
+            "Valores Únicos": unique_counts
+        }).sort_values(by="Valores Únicos", ascending=False)
+
+        display(HTML("<h3 style='font-size: 20px;'>Valores Unicos</h3>"))
+        display(unique_values_df.style.set_table_attributes('style="font-size: 16px;"'))
+
+        # Gerar gráfico de barras para valores únicos
+        plt.figure(figsize=(10, 6))
+        plt.barh(unique_values_df["Nome da Coluna"], unique_values_df["Valores Únicos"], color='lightgreen')
+        plt.xlabel('Contagem de Valores Únicos')
+        plt.title('Valores Únicos por Coluna')
+        plt.gca().invert_yaxis()  # Inverter eixo y para melhor visualização
+        plt.show()
