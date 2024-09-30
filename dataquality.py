@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 from IPython.display import display, HTML
 
 # Classe DataQuality para analisar datasets e gerar gráficos
@@ -58,3 +59,27 @@ class DataQuality:
         display(HTML("<h2 style='font-size: 20px;'>Data Preview</h2>"))
         display(HTML("<h3 style='font-size: 20px;'>As 10 primeiras linhas: </h3>"))
         display(head.style.set_table_attributes('style="font-size: 16px;"'))
+
+    def missing_values(self):  # Missing Values Table and Plot
+        # Contar valores nulos e calcular o percentual
+        null_counts = self.dataframe.isnull().sum()
+        null_percentage = (null_counts / len(self.dataframe)) * 100
+
+        # Criar dataframe com valores nulos e percentuais
+        missing_values_df = pd.DataFrame({
+            "Nome da Coluna": self.dataframe.columns,
+            "Contagem de Nulos": null_counts,
+            "Percentual de Nulos (%)": null_percentage
+        }).sort_values(by="Contagem de Nulos", ascending=False)
+
+        # Exibir tabela de valores nulos com formatação
+        display(HTML("<h3 style='font-size: 20px;'>Valores nulos</h3>"))
+        display(missing_values_df.style.set_table_attributes('style="font-size: 16px;"'))
+
+        # Gerar gráfico de barras
+        plt.figure(figsize=(10, 6))
+        plt.barh(missing_values_df["Nome da Coluna"], missing_values_df["Contagem de Nulos"], color='skyblue')
+        plt.xlabel('Contagem de Nulos')
+        plt.title('Valores Nulos por Coluna')
+        plt.gca().invert_yaxis()  # Inverter eixo y para facilitar leitura
+        plt.show()
