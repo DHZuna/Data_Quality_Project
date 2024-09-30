@@ -104,3 +104,26 @@ class DataQuality:
         plt.title('Valores Únicos por Coluna')
         plt.gca().invert_yaxis()  # Inverter eixo y para melhor visualização
         plt.show()
+
+    
+       # Método para contar os valores em colunas categóricas
+    def categorical_value_counts(self): 
+        categorical_columns = self.dataframe.select_dtypes(include=['object']).columns
+        display(HTML("<h3 style='font-size: 20px;'>Contagens de valor em colunas categóricas</h3>"))
+
+        # Loop through each categorical column
+        for col in categorical_columns:
+            display(HTML(f"<h4 style='font-size: 18px;'>{col} - Contagem de Valores</h4>"))
+            
+            # Contagem dos valores em cada categoria
+            value_counts_df = self.dataframe[col].value_counts().reset_index()
+            value_counts_df.columns = [col, 'Contagem']
+            display(value_counts_df.style.set_table_attributes('style="font-size: 16px;"'))
+            
+            # Gerar gráfico de barras para visualização
+            plt.figure(figsize=(10, 6))
+            plt.barh(value_counts_df[col], value_counts_df['Contagem'], color='lightcoral')
+            plt.xlabel('Contagem')
+            plt.title(f'Contagem de {col}')
+            plt.gca().invert_yaxis()  # Inverter eixo y para melhor visualização
+            plt.show()
